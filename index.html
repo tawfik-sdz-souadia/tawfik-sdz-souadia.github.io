@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Souadia Toufik — Full-Stack Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0c0c;
+  --surface: #141414;
+  --border: #222;
+  --accent: #e8ff47;
+  --accent2: #ff4757;
+  --text: #f0f0f0;
+  --muted: #666;
+  --dim: #333;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* Grain overlay */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 1000; opacity: 0.4;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 48px;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s, background 0.3s;
+}
+nav.scrolled { border-color: var(--border); background: rgba(12,12,12,0.92); backdrop-filter: blur(12px); }
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem; letter-spacing: 0.06em; color: var(--text);
+}
+.nav-logo span { color: var(--accent); }
+.nav-links { display: flex; gap: 36px; list-style: none; }
+.nav-links a {
+  font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--muted); text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--text); }
+.nav-cta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem; letter-spacing: 0.05em;
+  background: var(--accent); color: #000; border: none;
+  padding: 9px 20px; border-radius: 2px; cursor: pointer;
+  font-weight: 500; text-decoration: none; transition: opacity 0.2s;
+}
+.nav-cta:hover { opacity: 0.85; }
+
+/* HERO */
+.hero {
+  min-height: 100vh; display: flex; align-items: center;
+  padding: 120px 48px 80px;
+  position: relative; overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0; overflow: hidden;
+}
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(232,255,71,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232,255,71,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: gridShift 20s linear infinite;
+}
+@keyframes gridShift { to { transform: translateY(60px); } }
+
+.hero-glow {
+  position: absolute; top: -200px; right: -200px;
+  width: 700px; height: 700px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,255,71,0.06) 0%, transparent 70%);
+  animation: pulse 6s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(1.1); opacity: 1; } }
+
+.hero-content { position: relative; z-index: 2; max-width: 900px; }
+.hero-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem; color: var(--accent); letter-spacing: 0.15em;
+  text-transform: uppercase; margin-bottom: 24px;
+  display: flex; align-items: center; gap: 10px;
+}
+.hero-tag::before { content: ''; width: 40px; height: 1px; background: var(--accent); }
+
+.hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4.5rem, 12vw, 10rem);
+  line-height: 0.92; letter-spacing: -0.01em;
+  margin-bottom: 32px;
+}
+.hero h1 .line2 { color: var(--accent); display: block; }
+.hero h1 .outline {
+  -webkit-text-stroke: 1px var(--dim);
+  color: transparent;
+}
+
+.hero-desc {
+  font-size: 1.1rem; color: var(--muted); line-height: 1.7;
+  max-width: 520px; margin-bottom: 48px; font-weight: 300;
+}
+.hero-desc strong { color: var(--text); font-weight: 400; }
+
+.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+.btn-primary {
+  background: var(--accent); color: #000; padding: 14px 32px;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+  font-weight: 500; border: none; border-radius: 2px; cursor: pointer;
+  text-decoration: none; letter-spacing: 0.05em;
+  transition: transform 0.2s, opacity 0.2s; display: inline-block;
+}
+.btn-primary:hover { transform: translateY(-2px); opacity: 0.9; }
+.btn-secondary {
+  border: 1px solid var(--dim); color: var(--muted); padding: 14px 32px;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+  border-radius: 2px; cursor: pointer; text-decoration: none;
+  letter-spacing: 0.05em; transition: border-color 0.2s, color 0.2s;
+  display: inline-block;
+}
+.btn-secondary:hover { border-color: var(--text); color: var(--text); }
+
+.hero-stats {
+  position: absolute; right: 48px; bottom: 80px;
+  display: flex; flex-direction: column; gap: 24px; z-index: 2;
+}
+.stat { text-align: right; }
+.stat-num {
+  font-family: 'Bebas Neue', sans-serif; font-size: 2.8rem;
+  line-height: 1; color: var(--text);
+}
+.stat-num span { color: var(--accent); }
+.stat-label { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* SECTIONS */
+section { padding: 100px 48px; }
+.section-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem; color: var(--accent); letter-spacing: 0.15em;
+  text-transform: uppercase; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-tag::before { content: ''; width: 30px; height: 1px; background: var(--accent); }
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  letter-spacing: 0.02em; line-height: 0.95;
+  margin-bottom: 60px;
+}
+
+/* STACK */
+.stack-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.stack-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 2px;
+}
+.stack-item {
+  background: var(--bg); padding: 24px 20px;
+  display: flex; flex-direction: column; gap: 8px;
+  transition: background 0.2s;
+  border: 1px solid transparent;
+}
+.stack-item:hover { background: var(--surface); border-color: var(--dim); }
+.stack-icon { font-size: 1.4rem; }
+.stack-name { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--text); }
+.stack-type { font-size: 0.68rem; color: var(--muted); }
+
+/* EXPERIENCE */
+.exp-list { display: flex; flex-direction: column; gap: 2px; }
+.exp-item {
+  display: grid; grid-template-columns: 1fr auto;
+  align-items: start; gap: 24px;
+  padding: 28px 0; border-bottom: 1px solid var(--border);
+  transition: padding 0.3s;
+}
+.exp-item:first-child { border-top: 1px solid var(--border); }
+.exp-item:hover { padding-left: 12px; }
+.exp-role { font-size: 1.05rem; font-weight: 500; margin-bottom: 6px; }
+.exp-company {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem; color: var(--accent); margin-bottom: 10px;
+}
+.exp-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.6; max-width: 600px; }
+.exp-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem; color: var(--muted); white-space: nowrap;
+  padding-top: 4px;
+}
+
+/* PROJECTS */
+.projects-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2px;
+}
+.project-card {
+  background: var(--surface); padding: 36px 32px;
+  border: 1px solid var(--border); position: relative; overflow: hidden;
+  transition: border-color 0.3s;
+  display: flex; flex-direction: column;
+}
+.project-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 2px; background: var(--accent);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.3s;
+}
+.project-card:hover { border-color: var(--dim); }
+.project-card:hover::before { transform: scaleX(1); }
+.project-card.featured { border-color: rgba(232,255,71,0.2); }
+.project-card.featured::before { transform: scaleX(1); background: var(--accent2); }
+.project-num {
+  font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem;
+  color: var(--dim); line-height: 1; margin-bottom: 20px;
+}
+.project-badge {
+  position: absolute; top: 20px; right: 20px;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  background: var(--accent2); color: #fff;
+  padding: 3px 8px; border-radius: 2px;
+}
+.project-title { font-size: 1.15rem; font-weight: 500; margin-bottom: 12px; }
+.project-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; margin-bottom: 24px; flex: 1; }
+.project-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+  padding: 4px 10px; border: 1px solid var(--dim); border-radius: 2px;
+  color: var(--muted); letter-spacing: 0.05em;
+}
+.project-link {
+  margin-top: 20px; font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem; color: var(--accent); text-decoration: none;
+  letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;
+  transition: gap 0.2s;
+}
+.project-link:hover { gap: 12px; }
+
+/* CERTS */
+.certs-row { display: flex; gap: 2px; flex-wrap: wrap; }
+.cert-card {
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 28px 32px; flex: 1; min-width: 220px;
+  transition: border-color 0.2s;
+}
+.cert-card:hover { border-color: var(--dim); }
+.cert-icon { font-size: 1.6rem; margin-bottom: 12px; }
+.cert-name { font-size: 0.95rem; font-weight: 500; margin-bottom: 4px; }
+.cert-issuer { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--muted); }
+
+/* CONTACT */
+.contact-section {
+  background: var(--surface); border-top: 1px solid var(--border);
+  text-align: center;
+}
+.contact-section .section-title { margin-bottom: 20px; }
+.contact-sub { color: var(--muted); font-size: 1rem; margin-bottom: 48px; font-weight: 300; }
+.contact-email {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.8rem, 5vw, 3.5rem);
+  color: var(--accent); text-decoration: none; letter-spacing: 0.05em;
+  transition: opacity 0.2s; display: block; margin-bottom: 48px;
+}
+.contact-email:hover { opacity: 0.75; }
+.contact-links { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
+.contact-link {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.78rem;
+  color: var(--muted); text-decoration: none; letter-spacing: 0.08em;
+  border-bottom: 1px solid var(--dim); padding-bottom: 2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.contact-link:hover { color: var(--text); border-color: var(--text); }
+
+/* FOOTER */
+footer {
+  padding: 24px 48px; border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.68rem;
+  color: var(--muted);
+}
+
+/* ANIMATIONS */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+/* MARQUEE */
+.marquee-section {
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  overflow: hidden; padding: 18px 0;
+  background: var(--accent); 
+}
+.marquee-track {
+  display: flex; gap: 0; white-space: nowrap;
+  animation: marquee 20s linear infinite;
+}
+.marquee-item {
+  font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem;
+  letter-spacing: 0.1em; color: #000; padding: 0 40px;
+  display: flex; align-items: center; gap: 40px;
+}
+.marquee-dot { width: 6px; height: 6px; background: rgba(0,0,0,0.4); border-radius: 50%; display: inline-block; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+@media (max-width: 768px) {
+  nav { padding: 16px 20px; }
+  .nav-links { display: none; }
+  .hero { padding: 100px 20px 60px; }
+  .hero-stats { display: none; }
+  section { padding: 70px 20px; }
+  footer { flex-direction: column; gap: 8px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+  <div class="nav-logo">ST<span>.</span>DEV</div>
+  <ul class="nav-links">
+    <li><a href="#stack">Stack</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="mailto:toufiksouadia@gmail.com" class="nav-cta">Hire me →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-tag">Available for opportunities</div>
+    <h1>
+      SOUADIA<br>
+      <span class="line2">TOUFIK</span>
+      <span class="outline"> DEV</span>
+    </h1>
+    <p class="hero-desc">
+      Full-Stack Engineer building <strong>web applications</strong>, <strong>AI-powered tools</strong> and <strong>ERP systems</strong>.
+      Laravel · Node.js · React · Express.js. Based in <strong>Alger, Algeria</strong>.
+    </p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn-primary">View Projects →</a>
+      <a href="#contact" class="btn-secondary">Get in touch</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">5<span>+</span></div>
+      <div class="stat-label">Years exp.</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">3<span>+</span></div>
+      <div class="stat-label">Companies</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">2</div>
+      <div class="stat-label">Certifications</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track" id="marquee">
+    <div class="marquee-item">Laravel <span class="marquee-dot"></span></div>
+    <div class="marquee-item">React <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Express.js <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Tailwind CSS <span class="marquee-dot"></span></div>
+    <div class="marquee-item">LangChain <span class="marquee-dot"></span></div>
+    <div class="marquee-item">PostgreSQL <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Docker <span class="marquee-dot"></span></div>
+    <div class="marquee-item">RAG Pipelines <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Ollama / LLM <span class="marquee-dot"></span></div>
+    <div class="marquee-item">CCNA <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Laravel <span class="marquee-dot"></span></div>
+    <div class="marquee-item">React <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Express.js <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Tailwind CSS <span class="marquee-dot"></span></div>
+    <div class="marquee-item">LangChain <span class="marquee-dot"></span></div>
+    <div class="marquee-item">PostgreSQL <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Docker <span class="marquee-dot"></span></div>
+    <div class="marquee-item">RAG Pipelines <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Ollama / LLM <span class="marquee-dot"></span></div>
+    <div class="marquee-item">CCNA <span class="marquee-dot"></span></div>
+  </div>
+</div>
+
+<!-- STACK -->
+<section class="stack-section" id="stack">
+  <div class="section-tag">Tech Stack</div>
+  <div class="section-title">TOOLS &<br>TECHNOLOGIES</div>
+  <div class="stack-grid reveal">
+    <div class="stack-item"><div class="stack-icon">⚙️</div><div class="stack-name">Laravel</div><div class="stack-type">Backend</div></div>
+    <div class="stack-item"><div class="stack-icon">🚂</div><div class="stack-name">Express.js</div><div class="stack-type">Backend</div></div>
+    <div class="stack-item"><div class="stack-icon">🟢</div><div class="stack-name">Node.js</div><div class="stack-type">Backend</div></div>
+    <div class="stack-item"><div class="stack-icon">⚛️</div><div class="stack-name">React</div><div class="stack-type">Frontend</div></div>
+    <div class="stack-item"><div class="stack-icon">🎨</div><div class="stack-name">Tailwind CSS</div><div class="stack-type">Frontend</div></div>
+    <div class="stack-item"><div class="stack-icon">🐘</div><div class="stack-name">PostgreSQL</div><div class="stack-type">Database</div></div>
+    <div class="stack-item"><div class="stack-icon">🍃</div><div class="stack-name">MongoDB</div><div class="stack-type">Database</div></div>
+    <div class="stack-item"><div class="stack-icon">🤖</div><div class="stack-name">LangChain</div><div class="stack-type">AI / LLM</div></div>
+    <div class="stack-item"><div class="stack-icon">🦙</div><div class="stack-name">Ollama / LLM</div><div class="stack-type">AI / LLM</div></div>
+    <div class="stack-item"><div class="stack-icon">🔍</div><div class="stack-name">RAG Pipelines</div><div class="stack-type">AI / LLM</div></div>
+    <div class="stack-item"><div class="stack-icon">🐳</div><div class="stack-name">Docker</div><div class="stack-type">DevOps</div></div>
+    <div class="stack-item"><div class="stack-icon">🔧</div><div class="stack-name">Git / CI-CD</div><div class="stack-type">DevOps</div></div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-tag">Career</div>
+  <div class="section-title">WORK<br>EXPERIENCE</div>
+  <div class="exp-list reveal">
+    <div class="exp-item">
+      <div>
+        <div class="exp-role">Full-Stack Developer</div>
+        <div class="exp-company">Dev Team — Kouba, Alger</div>
+        <div class="exp-desc">Built complete web applications with Laravel (PHP) and Node.js/Express backends with React/Tailwind frontend. Integrated REST APIs, authentication systems and business logic. Managed deployments via Docker on Linux.</div>
+      </div>
+      <div class="exp-date">2023 – 2025</div>
+    </div>
+    <div class="exp-item">
+      <div>
+        <div class="exp-role">Frontend Developer</div>
+        <div class="exp-company">ONPS — Office National des Publications Scolaires, El Achour</div>
+        <div class="exp-desc">Developed and maintained institutional web interfaces in React and Tailwind CSS. Built reusable components, dashboards, and document management UIs. Optimized frontend performance and collaborated with backend teams.</div>
+      </div>
+      <div class="exp-date">2022 – 2024</div>
+    </div>
+    <div class="exp-item">
+      <div>
+        <div class="exp-role">Web Developer</div>
+        <div class="exp-company">Dev Team — Kouba, Alger</div>
+        <div class="exp-desc">Backend development in PHP/Laravel and Python/Node.js. Frontend with JavaScript and ReactJS. Database design and management with MySQL and PostgreSQL.</div>
+      </div>
+      <div class="exp-date">2019 – 2021</div>
+    </div>
+    <div class="exp-item">
+      <div>
+        <div class="exp-role">Web Developer Intern</div>
+        <div class="exp-company">Glaxiom — Bordj Kiffan, Alger</div>
+        <div class="exp-desc">Frontend development with HTML, CSS, and JavaScript. First professional experience with software development lifecycle and Git version control.</div>
+      </div>
+      <div class="exp-date">Fév – Mars 2019</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" style="background: var(--surface); border-top: 1px solid var(--border);">
+  <div class="section-tag">Work</div>
+  <div class="section-title">NOTABLE<br>PROJECTS</div>
+  <div class="projects-grid reveal">
+
+    <div class="project-card featured">
+      <div class="project-badge">🏆 Award</div>
+      <div class="project-num">01</div>
+      <div class="project-title">Algerian Linux System</div>
+      <div class="project-desc">Built a fully customized Linux OS from scratch using Linux From Scratch (LFS). Developed two kernel-space USB device drivers in Rust. Winner of the national Linux creation competition — Saïda, 2025.</div>
+      <div class="project-tags">
+        <span class="tag">Linux</span>
+        <span class="tag">Rust</span>
+        <span class="tag">Kernel</span>
+        <span class="tag">LFS</span>
+        <span class="tag">USB Drivers</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-num">02</div>
+      <div class="project-title">ONPS Institutional Website</div>
+      <div class="project-desc">Official website of the Office National des Publications Scolaires — built with React and Tailwind CSS. Features a full publication catalogue, document management interfaces, and administrative dashboards for national institutional use.</div>
+      <div class="project-tags">
+        <span class="tag">React</span>
+        <span class="tag">Tailwind CSS</span>
+        <span class="tag">REST API</span>
+        <span class="tag">Institutional</span>
+      </div>
+      <a href="https://www.onps.dz" target="_blank" class="project-link">Visit website →</a>
+    </div>
+
+    <div class="project-card">
+      <div class="project-num">03</div>
+      <div class="project-title">Industry ERP System — Kiva Star, Djelfa</div>
+      <div class="project-desc">Custom private ERP built for an industrial company in Djelfa. Covers full inventory management, supplier tracking, sales pipeline, invoicing and business reporting. Designed for daily operational use by non-technical staff. Private codebase — not public.</div>
+      <div class="project-tags">
+        <span class="tag">Laravel</span>
+        <span class="tag">React</span>
+        <span class="tag">PostgreSQL</span>
+        <span class="tag">Private</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- PERSONAL WORK -->
+<section style="background: var(--bg); border-top: 1px solid var(--border);">
+  <div class="section-tag">Volume</div>
+  <div class="section-title">MORE<br>WORK</div>
+  <p style="color:var(--muted); font-size:0.95rem; max-width:560px; line-height:1.8; margin-bottom:48px; font-weight:300;">
+    Beyond the highlighted projects, I have delivered a significant volume of real-world work across backend and full-stack development.
+  </p>
+  <div class="exp-list reveal">
+    <div class="exp-item">
+      <div>
+        <div class="exp-role">18 Backend Projects</div>
+        <div class="exp-company">Various clients & companies</div>
+        <div class="exp-desc">REST APIs, authentication systems, database architecture, admin panels and business logic layers built with Laravel and Node.js — deployed on production servers for real users. All under NDA or private contracts.</div>
+      </div>
+      <div class="exp-date" style="font-size:2rem; font-family:'Bebas Neue',sans-serif; color:var(--accent); line-height:1;">18</div>
+    </div>
+    <div class="exp-item">
+      <div>
+        <div class="exp-role">2 Full-Stack Applications</div>
+        <div class="exp-company">End-to-end delivery</div>
+        <div class="exp-desc">Complete web applications covering frontend (React + Tailwind), backend (Laravel / Node.js), database design and production deployment — built independently from requirements to launch.</div>
+      </div>
+      <div class="exp-date" style="font-size:2rem; font-family:'Bebas Neue',sans-serif; color:var(--accent); line-height:1;">02</div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section>
+  <div class="section-tag">Credentials</div>
+  <div class="section-title">CERTIFICATIONS<br>& EDUCATION</div>
+  <div class="certs-row reveal" style="margin-bottom: 48px;">
+    <div class="cert-card">
+      <div class="cert-icon">🌐</div>
+      <div class="cert-name">Cisco CCNA</div>
+      <div class="cert-issuer">Cisco — 2022</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">🧠</div>
+      <div class="cert-name">Fundamentals of Deep Learning</div>
+      <div class="cert-issuer">NVIDIA DLI — 2024</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">🎓</div>
+      <div class="cert-name">Master en Informatique</div>
+      <div class="cert-issuer">USTHB — Alger, 2020</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">📘</div>
+      <div class="cert-name">Licence en Informatique</div>
+      <div class="cert-issuer">USTHB — Alger, 2018</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="section-tag">Let's talk</div>
+  <div class="section-title">AVAILABLE FOR<br>NEW PROJECTS</div>
+  <p class="contact-sub">Open to full-time positions and freelance work. Based in Alger — remote friendly.</p>
+  <a href="mailto:toufiksouadia@gmail.com" class="contact-email">toufiksouadia@gmail.com</a>
+  <div class="contact-links">
+    <a href="#" class="contact-link">GitHub</a>
+    <a href="#" class="contact-link">LinkedIn</a>
+    <a href="tel:0663179383" class="contact-link">+213 663 17 93 83</a>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 Souadia Toufik</span>
+  <span>Full-Stack Developer — Alger, Algeria</span>
+</footer>
+
+<script>
+// Cursor
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+});
+document.querySelectorAll('a, button, .stack-item, .project-card, .exp-item').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+});
+
+// Nav scroll
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// Reveal on scroll
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.1 });
+reveals.forEach(r => observer.observe(r));
+</script>
+</body>
+</html>
